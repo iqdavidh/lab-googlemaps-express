@@ -2,9 +2,67 @@
 <p>{{ restaurant.description}}</p>
 <p>
 
-    Longitud: {{ restaurant.location.coordinates.[0]}} ,  Latitud: {{ restaurant.location.coordinates.[1]}}
+    Longitud: {{ restaurant.location.coordinates.[0]}} , Latitud: {{ restaurant.location.coordinates.[1]}}
 </p>
 
 
 <a href="/restaurants/{{restaurant._id}}/edit">Edit this restaurant</a>
+
+<div id="map" style="  width: 100%;  height: 400px;"></div>
+{{!-- added your scripts here --}}
+
+<!--  Axios CDN  -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUeQXCyJDlhOtCB8JwWAk8zCxpjk6k-jo">
+</script>
+<script>
+
+
+
+
+    let center = {
+        lat: undefined,
+        lng: undefined
+    };
+
+    window.onload = () => {
+
+
+        const restaurant = {
+            lat: {{ restaurant.location.coordinates.[1]}},
+            lng:  {{ restaurant.location.coordinates.[0]}}
+        };
+
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: restaurant
+        });
+
+
+
+        const markers = [];
+
+        const pin = new google.maps.Marker({
+            position: {
+                lat:{{ restaurant.location.coordinates.[1] }},
+                lng: {{restaurant.location.coordinates.[0]}}
+            },
+            map: map,
+            title: restaurant.name
+        });
+        markers.push(pin);
+
+
+        let center = {
+            lat: undefined,
+            lng: undefined
+        };
+
+
+    };
+
+
+</script>
+
+
 <a href="/restaurants">Go back to the list</a>
