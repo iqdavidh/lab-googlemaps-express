@@ -1,10 +1,10 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const Restaurant = require('../models/restaurant');
 
 // GET => render the form to create a new restaurant
 router.get('/new', (req, res, next) => {
-  res.render('restaurants/new');
+	res.render('restaurants/new');
 });
 
 // POST => to create new restaurant and save it to the DB
@@ -14,14 +14,15 @@ router.post('/', (req, res, next) => {
 	// add the location object
 	let location = {
 		type: 'Point',
-		coordinates: [ parseFloat( req.body.longitude),  parseFloat(req.body.latitude) ]
+		coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
 	};
 
 
 	const newRestaurant = new Restaurant({
 		name: req.body.name,
 		description: req.body.description,
-		location:    location
+		address: req.body.address,
+		location: location
 	});
 
 	newRestaurant.save((error) => {
@@ -35,11 +36,11 @@ router.post('/', (req, res, next) => {
 
 // GET => to retrieve all the restaurants from the DB
 router.get('/', (req, res, next) => {
-	Restaurant.find({},(error, restaurantsFromDB) => {
+	Restaurant.find({}, (error, restaurantsFromDB) => {
 		if (error) {
 			next(error);
 		} else {
-			res.render('restaurants/index', { restaurants: restaurantsFromDB });
+			res.render('restaurants/index', {restaurants: restaurantsFromDB});
 		}
 	});
 });
@@ -50,7 +51,7 @@ router.get('/:restaurant_id/edit', (req, res, next) => {
 		if (error) {
 			next(error);
 		} else {
-			res.render('restaurants/update', { restaurant });
+			res.render('restaurants/update', {restaurant});
 		}
 	});
 });
@@ -60,19 +61,20 @@ router.post('/:restaurant_id', (req, res, next) => {
 
 	let location = {
 		type: 'Point',
-		coordinates: [ parseFloat( req.body.longitude),  parseFloat(req.body.latitude) ]
+		coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
 
 	};
 
 
 	Restaurant.findById(req.params.restaurant_id, (error, restaurant) => {
 		if (error) {
-      next(error);
-    } else {
+			next(error);
+		} else {
 
-			restaurant.name        = req.body.name;
+			restaurant.name = req.body.name;
 			restaurant.description = req.body.description;
-			restaurant.location=  location;
+			restaurant.address = req.body.address;
+			restaurant.location = location;
 
 
 			restaurant.save(error => {
@@ -88,7 +90,7 @@ router.post('/:restaurant_id', (req, res, next) => {
 
 // DELETE => remove the restaurant from the DB
 router.get('/:restaurant_id/delete', (req, res, next) => {
-	Restaurant.remove({ _id: req.params.restaurant_id }, function(error, restaurant) {
+	Restaurant.remove({_id: req.params.restaurant_id}, function (error, restaurant) {
 		if (error) {
 			next(error);
 		} else {
@@ -104,7 +106,7 @@ router.get('/api', (req, res, next) => {
 		if (error) {
 			next(error);
 		} else {
-			res.status(200).json({ restaurants: allRestaurantsFromDB });
+			res.status(200).json({restaurants: allRestaurantsFromDB});
 		}
 	});
 });
@@ -116,7 +118,7 @@ router.get('/api/:id', (req, res, next) => {
 		if (error) {
 			next(error)
 		} else {
-			res.status(200).json({ restaurant: oneRestaurantFromDB });
+			res.status(200).json({restaurant: oneRestaurantFromDB});
 		}
 	});
 });
@@ -127,7 +129,7 @@ router.get('/:restaurant_id', (req, res, next) => {
 		if (error) {
 			next(error);
 		} else {
-			res.render('restaurants/show', { restaurant: restaurant });
+			res.render('restaurants/show', {restaurant: restaurant});
 		}
 	});
 });
